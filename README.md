@@ -13,6 +13,9 @@ CLI credentials or creator-only operations in client code.
 | `rundot` CLI | GitHub release installer below | Run `command -v rundot`; the macOS/Linux installer normally uses `~/.local/bin/rundot` | 7.10.0 |
 | `@series-inc/rundot-game-sdk` | npm dependency below | `node_modules/@series-inc/rundot-game-sdk/` | 5.24.0 |
 
+New to the platform? Begin with RUN’s official
+[Getting Started guide](https://series-1.gitbook.io/rundot-docs/readme/getting-started).
+
 ### Install the `rundot` CLI
 
 macOS or Linux:
@@ -259,6 +262,15 @@ denying unnecessary Firebase, protobuf, and native fsevents install behavior.
 - [`docs/run-capabilities.md`](docs/run-capabilities.md) maps every SDK surface,
   what prior games taught the template, required authority, and its source.
 - [`docs/rundot-cli.md`](docs/rundot-cli.md) is the CLI command/safety atlas.
+- [`docs/social-k-factor.md`](docs/social-k-factor.md) explains how to make
+  invitation, co-op, challenge, and relay loops feel like play while measuring
+  K-factor honestly.
+- [`docs/cpi-conscious-game-design.md`](docs/cpi-conscious-game-design.md)
+  connects category, fantasy, art direction, ad creative, CPI, retention, and
+  LTV without encouraging misleading acquisition creative.
+- [`docs/audience-monetization-women-35-45.md`](docs/audience-monetization-women-35-45.md)
+  is an ethical hybrid ads/IAP research brief for women aged 35–45, with
+  behavior-first segmentation and testable offer hypotheses.
 - [`additional_features/`](additional_features/) contains only the typechecked
   patterns intentionally excluded from the default demo, including camera,
   microphone, simulation, and permissioned-content examples, plus an adoption guide.
