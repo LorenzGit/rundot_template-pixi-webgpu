@@ -14,7 +14,9 @@ CLI credentials or creator-only operations in client code.
 | `@series-inc/rundot-game-sdk` | npm dependency below | `node_modules/@series-inc/rundot-game-sdk/` | 5.24.0 |
 
 New to the platform? Begin with RUN’s official
-[Getting Started guide](https://series-1.gitbook.io/rundot-docs/readme/getting-started).
+[Getting Started guide](https://series-1.gitbook.io/rundot-docs/readme/getting-started),
+or follow the guided
+[Start building on RUN.world setup](https://events.run.world/events/cli-setup/).
 
 ### Install the `rundot` CLI
 
