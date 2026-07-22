@@ -5,6 +5,10 @@ app is deliberately ordinary: React 19 UI, PixiJS 8 with WebGPU-first/WebGL
 fallback, generated WebAudio, strict TypeScript, versioned saves, localization,
 daily systems, and fail-closed RUN integrations.
 
+<p align="center">
+  <img src="./image.png" alt="Pixel Foundry template main menu running in a portrait mobile viewport" width="386">
+</p>
+
 The repository also serves as a map of the wider RUN platform. Safe client
 features are visible in the active demo behind explicit controls. Patterns that
 can navigate away, spend value, mutate remote state, upload content, require
