@@ -1,5 +1,150 @@
 # RUN Pixi WebGPU template
 
+## RUN.world CLI and SDK
+
+This template uses two separate RUN.world tools. The **`rundot` CLI** is the
+creator/operator tool used from a terminal to create, configure, test, deploy,
+and operate games. The **RUN Game SDK** is the typed browser library imported by
+the game to communicate with the RUN host while a player is playing. Never put
+CLI credentials or creator-only operations in client code.
+
+| Tool | Install | Where it lives | Audited version |
+| --- | --- | --- | --- |
+| `rundot` CLI | GitHub release installer below | Run `command -v rundot`; the macOS/Linux installer normally uses `~/.local/bin/rundot` | 7.10.0 |
+| `@series-inc/rundot-game-sdk` | npm dependency below | `node_modules/@series-inc/rundot-game-sdk/` | 5.24.0 |
+
+### Install the `rundot` CLI
+
+macOS or Linux:
+
+```sh
+curl -fsSL https://github.com/series-ai/rundot-cli-releases/releases/latest/download/install.sh | bash
+```
+
+Windows PowerShell:
+
+```powershell
+irm https://github.com/series-ai/rundot-cli-releases/releases/latest/download/install.ps1 | iex
+```
+
+Restart the terminal after installation, then verify or update it:
+
+```sh
+command -v rundot
+rundot --version
+rundot --help
+rundot update
+```
+
+The usual first-project flow is:
+
+```sh
+rundot login       # authenticate the creator
+rundot init        # create a RUN game and game.config.prod.json
+npm run build      # produce ./dist
+rundot deploy      # upload a new private/unlisted version by default
+```
+
+`rundot init` creates a remote game; `deploy`, data-management, generation,
+LiveOps, marketing, moderation, and publishing commands can change remote state
+or spend value. Inspect `rundot <command> --help`, the target game ID, and the
+environment immediately before using them.
+
+### Every CLI command group
+
+This is every top-level group exposed by the installed CLI 7.10.0, including
+hidden beta groups. Each group can have nested commands and version-specific
+flags; use `rundot <command> --help` for the exhaustive current syntax. Set
+`RUNDOT_BETA_FEATURES=1` only when a beta workflow is intentionally needed.
+
+| Command | Purpose | Availability / risk |
+| --- | --- | --- |
+| `rundot update` | Update the CLI or change update channel | Changes local tooling |
+| `rundot login` | Authenticate interactively or for headless CI | Never expose session material or API keys |
+| `rundot migrate-config` | Move legacy configuration into `rundot/` | Review generated file changes |
+| `rundot init` | Create a RUN game and local production config | Remote creation |
+| `rundot deploy` | Upload a built game version | Remote release; public visibility requires explicit intent |
+| `rundot list-games` | List games owned or editable by the creator | Read-only discovery |
+| `rundot game` | Manage metadata, versions, tags, editors, keys, configs, builds, and 3D jobs | Mixed read/write/billed operations |
+| `rundot analytics` | Query creator analytics and funnels | Visible beta; operational data may be sensitive |
+| `rundot marketing` | Prepare and operate paid campaigns and creatives | Hidden beta; can spend money |
+| `rundot socials` | Prepare and track organic launch packets | Hidden beta; can affect public-facing records |
+| `rundot offerwall` | Internal offerwall administration | Internal-only; not for ordinary creator games |
+| `rundot playground` | Manage scoped local Playground access | Keys are local secrets; purchases can be real |
+| `rundot generate` | Estimate and generate images, sprites, audio, video, TTS, text, and workflows | Credit-billed generation |
+| `rundot profile` | Inspect or search creator/player profiles | Primarily discovery |
+| `rundot storage` | Inspect, export, import, or mutate player key/value storage | May expose or destructively change player data |
+| `rundot assets` | List and manage generated creator/game assets | Removal can break consumers |
+| `rundot files` | Manage player/creator files, quotas, visibility, and transforms | Durable data mutations |
+| `rundot ugc` | Browse and moderate user-generated content | Hidden beta; privileged moderation |
+| `rundot jam` | Discover, scaffold, and submit jam projects | Submission is an external mutation |
+| `rundot skills` | Install or update RUN coding-agent skills | Changes local agent tooling |
+| `rundot ai` | Configure RUN AI assistance for a coding agent | Review generated local changes |
+| `rundot leaderboard` | Inspect scores, configuration, bans, and resets | Moderation/reset commands affect players |
+| `rundot intel` | Access competitive market intelligence | Some downloads/generation are credit-priced |
+| `rundot liveops` | Validate, diff, push, inspect, and roll back LiveOps config | Push/rollback changes live behavior |
+| `rundot stats` | Inspect and manage player statistics | Hidden beta; writes affect player state |
+| `rundot collectibles` | Inspect and manage collectible grants/catalogs | Hidden beta; writes affect player ownership |
+| `rundot image` | Remove backgrounds, upscale, estimate depth, and create turnarounds | Hidden beta; prod-only billed utilities |
+| `rundot credits` | Inspect credit balance and usage | Read-only until a billing/top-up action |
+| `rundot pack` | Compile and submit deterministic native runtime packs | Validate locally before submission |
+
+The repository’s safety-oriented command atlas is
+[`docs/rundot-cli.md`](docs/rundot-cli.md). The installed SDK also ships the
+official CLI manual at
+`node_modules/@series-inc/rundot-game-sdk/docs/rundot-developer-platform/cli-reference.md`.
+
+### Install and use the RUN Game SDK
+
+This template already locks SDK 5.24.0, so `npm ci` installs the reviewed
+version. In a new project, install the current package explicitly:
+
+```sh
+npm install @series-inc/rundot-game-sdk@latest
+```
+
+The package is downloaded into `node_modules/@series-inc/rundot-game-sdk/`.
+Its bundled manuals are under `docs/`, its declarations are under `dist/`, and
+its public package entry points are declared in its `package.json`. Scratch
+projects can run `npx rundot-sdk-setup` to copy documentation and configure
+agent files; this template is already configured and does not need that step.
+
+Import the host-aware singleton in game code:
+
+```ts
+import RundotGameAPI from '@series-inc/rundot-game-sdk/api'
+
+const profile = await RundotGameAPI.getProfile()
+await RundotGameAPI.appStorage.setItem('save', serializedSave)
+```
+
+SDK 5.24 initializes on import. Do not add the deprecated manual
+`initializeAsync()` call. Keep SDK calls behind a typed facade, capability-gate
+host features, catch failures, and never simulate successful ads, purchases,
+entitlements, scores, or privileged actions in local development.
+
+The SDK provides APIs rather than terminal commands:
+
+| Capability family | Installed SDK surfaces |
+| --- | --- |
+| Host and runtime | app/roles/launch intent, profile, system/device/environment, safe areas, gamepad, lifecycle, navigation, popups, preloader, trusted time, haptics |
+| Persistence and assets | device/app/owner/shared storage, CDN, shared assets, files, clips, native video |
+| Telemetry and configuration | analytics, funnels, logging, attribution, feature gates, LiveOps and experiments |
+| Monetization and access | rewarded/interstitial ads, IAP, Shop, credits, entitlements, subscriptions, access gates |
+| Progression and economy | leaderboards, stats, collectibles, simulation, large-number helpers |
+| Player communication and content | notifications, inbox/RCS, social/share flows, UGC, collaboration, voting, moderation seams |
+| Generation | text, image, sprite, audio/music/SFX/TTS, video, 3D, and avatar APIs |
+| Multiplayer | realtime client plus `mp-server`, and deterministic Syncplay tooling |
+| Privileged creator APIs | admin UGC and admin image/video/sprite/audio/3D generation; never expose these to ordinary players |
+
+[`docs/run-capabilities.md`](docs/run-capabilities.md) maps every installed SDK
+surface to an active demo or a typechecked adoption example. The main runtime
+boundary is [`src/sdk/runSdk.ts`](src/sdk/runSdk.ts), while intentionally
+excluded or privileged patterns live in
+[`additional_features/`](additional_features/).
+
+---
+
 A small, production-minded portrait starter for 2D RUN.world games. The default
 app is deliberately ordinary: React 19 UI, PixiJS 8 with WebGPU-first/WebGL
 fallback, generated WebAudio, strict TypeScript, versioned saves, localization,
