@@ -1,0 +1,26 @@
+import MenuScreenLayout from "./MenuScreenLayout.tsx";
+import { t } from "../systems/localization.ts";
+import { useStore } from "../state/store.ts";
+
+export default function StatsScreen() {
+    const state = useStore((value) => value);
+    const stats = [
+        ["BEST BOUNCES", state.score],
+        ["TOTAL PLAYS", state.totalPlays],
+        ["LEVEL", state.level],
+        ["COINS", state.coins],
+    ];
+    return (
+        <MenuScreenLayout title={t("MenuStats")} kicker="PLAYER RECORD">
+            <p className="screen-copy">{t("StatsBody")}</p>
+            <div className="stats-grid">
+                {stats.map(([label, value]) => (
+                    <article key={label}>
+                        <span>{label}</span>
+                        <strong>{value}</strong>
+                    </article>
+                ))}
+            </div>
+        </MenuScreenLayout>
+    );
+}
