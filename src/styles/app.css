@@ -5,6 +5,10 @@
        text-primary, bg-surface, ...). Add the game's full palette here. */
     --color-primary: #f4c95d;
     --color-surface: #10151f;
+    --text-sm: 0.9625rem;
+    --text-lg: 1.2375rem;
+    --text-2xl: 1.65rem;
+    --text-3xl: 2.0625rem;
 }
 
 :root {
@@ -76,6 +80,7 @@ body {
     inset: 0;
     overflow: hidden;
     background: #080d1a;
+    font-size: 17.5px;
     touch-action: none;
     user-select: none;
     -webkit-user-select: none;
@@ -157,14 +162,14 @@ body::before {
     margin: 0;
     color: #93a8b8;
     font:
-        700 11px / 1.2 ui-monospace,
+        700 13px / 1.2 ui-monospace,
         monospace;
-    letter-spacing: 0.16em;
+    letter-spacing: 0.13em;
 }
 .menu-header h1 {
     margin: 6px 0 0;
     font:
-        900 clamp(42px, 14vw, 72px) / 0.78 "Trebuchet MS",
+        900 clamp(46px, 15.4vw, 79px) / 0.78 "Trebuchet MS",
         sans-serif;
     letter-spacing: -0.075em;
 }
@@ -174,8 +179,8 @@ body::before {
 .menu-subtitle {
     margin: 14px 0 0;
     color: #c8d3dc;
-    font-size: 12px;
-    letter-spacing: 0.09em;
+    font-size: 14px;
+    letter-spacing: 0.07em;
 }
 .menu-orbit {
     position: absolute;
@@ -205,7 +210,7 @@ body::before {
     border-block: 1px solid #3a4652;
     color: #c8d3dc;
     font:
-        700 12px ui-monospace,
+        700 14px ui-monospace,
         monospace;
 }
 .play-button {
@@ -242,7 +247,7 @@ body::before {
     padding: 8px 10px;
     color: #e8edf1;
     text-align: left;
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 800;
 }
 .menu-tile:last-child {
@@ -257,16 +262,16 @@ body::before {
     border: 1px solid #f4c95d;
     color: #f4c95d;
     font:
-        800 11px ui-monospace,
+        800 13px ui-monospace,
         monospace;
 }
 .template-stamp {
     margin: 0;
     color: #778491;
     font:
-        9px ui-monospace,
+        11px ui-monospace,
         monospace;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.06em;
     text-align: center;
 }
 
@@ -284,7 +289,7 @@ body::before {
 }
 .subscreen-header h2 {
     margin: 2px 0 0;
-    font-size: clamp(24px, 8vw, 38px);
+    font-size: clamp(26px, 8.8vw, 42px);
     line-height: 1;
     letter-spacing: -0.04em;
 }
@@ -296,7 +301,7 @@ body::before {
     border-radius: 50%;
     background: #151d27;
     color: #f4c95d;
-    font-size: 34px;
+    font-size: 37px;
     line-height: 1;
 }
 .subscreen-content {
@@ -317,7 +322,7 @@ body::before {
 .safety-note {
     color: #8997a3;
     font:
-        11px / 1.45 ui-monospace,
+        13px / 1.45 ui-monospace,
         monospace;
 }
 
@@ -347,12 +352,12 @@ body::before {
 .reward-day small {
     color: #92a2af;
     font:
-        9px ui-monospace,
+        12px ui-monospace,
         monospace;
 }
 .reward-day strong {
     color: #f4c95d;
-    font-size: 26px;
+    font-size: 29px;
 }
 .disabled-action,
 .shop-card button {
@@ -363,7 +368,7 @@ body::before {
     background: #171c23;
     color: #7f8a94;
     font:
-        700 10px ui-monospace,
+        700 13px ui-monospace,
         monospace;
 }
 .claim-action {
@@ -379,7 +384,7 @@ body::before {
 .authority-label {
     color: #f4c95d;
     font:
-        700 10px / 1.4 ui-monospace,
+        700 12px / 1.4 ui-monospace,
         monospace;
     letter-spacing: 0.06em;
 }
@@ -400,7 +405,7 @@ body::before {
     display: flex;
     justify-content: space-between;
     gap: 12px;
-    font-size: 12px;
+    font-size: 14px;
 }
 .quest-card progress {
     width: 100%;
@@ -415,7 +420,7 @@ body::before {
     border: 1px dashed #58646e;
     background: transparent;
     color: #7f8a94;
-    font-size: 10px;
+    font-size: 13px;
 }
 .shop-card + .shop-card {
     margin-top: 10px;
@@ -426,7 +431,7 @@ body::before {
 }
 .shop-card p:not(.eyebrow) {
     color: #aab8c3;
-    font-size: 13px;
+    font-size: 14px;
 }
 
 .stats-grid {
@@ -446,12 +451,12 @@ body::before {
 .stats-grid span {
     color: #93a1ac;
     font:
-        10px ui-monospace,
+        12px ui-monospace,
         monospace;
 }
 .stats-grid strong {
     color: #f4c95d;
-    font-size: 32px;
+    font-size: 35px;
 }
 
 .setting-row,
@@ -465,7 +470,7 @@ body::before {
 }
 .setting-row > span,
 .setting-slider > span {
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 800;
     letter-spacing: 0.04em;
 }
@@ -526,14 +531,14 @@ body::before {
 .feature-status-grid span {
     color: #93a8b8;
     font:
-        8px ui-monospace,
+        11px ui-monospace,
         monospace;
-    letter-spacing: 0.09em;
+    letter-spacing: 0.07em;
 }
 .feature-status-grid strong {
     color: #f4c95d;
     font:
-        800 13px ui-monospace,
+        800 15px ui-monospace,
         monospace;
 }
 .feature-demo-card {
@@ -551,12 +556,12 @@ body::before {
 }
 .feature-demo-card h3 {
     margin: 4px 0 0;
-    font-size: 18px;
+    font-size: 20px;
 }
 .feature-demo-card > p {
     margin: 10px 0;
     color: #afbdc8;
-    font-size: 12px;
+    font-size: 14px;
     line-height: 1.45;
 }
 .feature-actions {
@@ -577,7 +582,7 @@ body::before {
     padding: 7px;
     color: #fff;
     font:
-        800 9px / 1.2 ui-monospace,
+        800 12px / 1.2 ui-monospace,
         monospace;
 }
 .feature-actions button:active {
@@ -597,7 +602,7 @@ body::before {
     color: #f4c95d;
     overflow-wrap: anywhere;
     font:
-        700 9px / 1.4 ui-monospace,
+        700 12px / 1.4 ui-monospace,
         monospace;
 }
 .capability-drawer {
@@ -611,7 +616,7 @@ body::before {
     color: #f4c95d;
     cursor: pointer;
     font:
-        800 10px ui-monospace,
+        800 12px ui-monospace,
         monospace;
     letter-spacing: 0.05em;
 }
@@ -633,7 +638,7 @@ body::before {
 }
 .capability-list strong {
     font:
-        800 10px ui-monospace,
+        800 12px ui-monospace,
         monospace;
 }
 .capability-list span {
@@ -641,7 +646,7 @@ body::before {
     padding: 3px 5px;
     color: #bcc9d2;
     font:
-        700 7px ui-monospace,
+        700 10px ui-monospace,
         monospace;
 }
 .capability-list span[data-safety="paid-or-billed"],
@@ -652,7 +657,7 @@ body::before {
 .capability-list p {
     margin: 6px 0 0;
     color: #9eadb9;
-    font-size: 11px;
+    font-size: 13px;
     line-height: 1.35;
 }
 .capability-list small {
@@ -660,7 +665,7 @@ body::before {
     margin-top: 5px;
     color: #d8bd72;
     font:
-        8px / 1.35 ui-monospace,
+        11px / 1.35 ui-monospace,
         monospace;
 }
 .toast {
@@ -709,7 +714,7 @@ button:disabled {
     color: #f4c95d;
     text-align: center;
     font:
-        800 11px ui-monospace,
+        800 13px ui-monospace,
         monospace;
     letter-spacing: 0.08em;
 }
@@ -719,7 +724,7 @@ button:disabled {
         gap: 10px;
     }
     .menu-header h1 {
-        font-size: 42px;
+        font-size: 46px;
     }
     .menu-subtitle {
         display: none;

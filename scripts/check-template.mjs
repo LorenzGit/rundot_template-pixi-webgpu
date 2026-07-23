@@ -74,6 +74,8 @@ const runSdk = read("src/sdk/runSdk.ts");
 const main = read("src/main.tsx");
 const pixiApp = read("src/game/pixiApp.ts");
 const thirdPartyNotices = read("THIRD_PARTY_NOTICES.md");
+const localAgents = read("AGENTS.md");
+const img2threejsSkill = read(".agents/skills/img2threejs/SKILL.md");
 
 expect(/^\d+\.\d+\.\d+$/.test(packageJson.version), "package version must be semver");
 expect(lock.version === packageJson.version, "package-lock root version must match package.json");
@@ -116,10 +118,20 @@ for (const dependency of Object.keys(packageJson.dependencies)) {
 }
 
 for (const required of [
+    ".agents/skills/img2threejs/LICENSE",
+    ".agents/skills/img2threejs/SKILL.md",
+    ".agents/skills/img2threejs/forge/stage1_intake/probe_image.py",
+    ".agents/skills/img2threejs/forge/stage2_spec/validate_sculpt_spec.py",
+    ".agents/skills/img2threejs/forge/stage3_build/generate_threejs_factory.py",
+    ".agents/skills/img2threejs/forge/stage4_review/divine_eye.py",
+    ".agents/skills/img2threejs/grimoire/build/geometry_patterns.md",
+    ".agents/skills/img2threejs/grimoire/feedback/render_capture.md",
+    ".agents/skills/img2threejs/grimoire/intake/validation_rubric.md",
     ".gitattributes",
     ".github/workflows/ci.yml",
     ".gitignore",
     ".npmignore",
+    "AGENTS.md",
     "CONTRIBUTING.md",
     "LICENSE.md",
     "SECURITY.md",
@@ -162,6 +174,24 @@ for (const required of [
 ]) {
     expect(fs.existsSync(path.join(root, required)), `required reference is missing: ${required}`);
 }
+
+expect(
+    /^name:\s*img2threejs$/m.test(img2threejsSkill) && /^\s+version:\s*["']1\.3\.0["']$/m.test(img2threejsSkill),
+    "vendored img2threejs skill identity or reviewed version changed",
+);
+expect(
+    localAgents.includes(".agents/skills/img2threejs/SKILL.md") && localAgents.includes("not a runtime dependency"),
+    "AGENTS.md must route and scope the project-local img2threejs skill",
+);
+expect(
+    thirdPartyNotices.includes("7b1c62ccf34957ac5d68b7863718af9eab777c7e") &&
+        thirdPartyNotices.includes(".agents/skills/img2threejs/LICENSE"),
+    "third-party notices must pin and license the vendored img2threejs skill",
+);
+expect(
+    !containsNamedEntry(".agents/skills/img2threejs", ".git"),
+    "vendored skills must not contain nested Git metadata",
+);
 
 for (const option of [
     "strict",

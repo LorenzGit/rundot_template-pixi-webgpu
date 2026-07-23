@@ -219,6 +219,7 @@ denying unnecessary Firebase, protobuf, and native fsevents install behavior.
 
 | Path | Purpose |
 | --- | --- |
+| `.agents/skills/` | Project-local authoring skills copied with the template |
 | `src/game/` | Pixi application, portrait stage, demo scene, particles, and tweens |
 | `src/sdk/` | Capability-gated RUN facade and visible Feature Lab integration |
 | `src/systems/` | Persistence, trusted time, localization, and daily systems |
@@ -261,6 +262,14 @@ denying unnecessary Firebase, protobuf, and native fsevents install behavior.
 
 ## Platform reference
 
+- [`.agents/skills/img2threejs/`](.agents/skills/img2threejs/) vendors
+  [`hoainho/img2threejs`](https://github.com/hoainho/img2threejs) as an optional
+  project-local authoring skill. It turns a suitable reference image into a
+  quality-gated, code-only procedural Three.js model and includes the
+  supporting `forge/` scripts and `grimoire/` rubrics. It is not part of the
+  client bundle, does not add a runtime dependency, and does not make Three.js
+  output directly renderable by Pixi; use it only when a derived project
+  deliberately needs that workflow.
 - [`docs/run-capabilities.md`](docs/run-capabilities.md) maps every SDK surface,
   what prior games taught the template, required authority, and its source.
 - [`docs/rundot-cli.md`](docs/rundot-cli.md) is the CLI command/safety atlas.
@@ -306,7 +315,10 @@ example.
    platform feature unavailable.
 6. Verify local, RUN Playground, and production-host behavior separately. Never
    fake host-only success in local development.
-7. Immediately before deployment, run `npm run check:all` and the workspace
+7. Keep project-local authoring skills that serve the derived game and remove
+   those that do not. They are development knowledge, not gameplay features or
+   runtime dependencies.
+8. Immediately before deployment, run `npm run check:all` and the workspace
    readiness audit, then produce a fresh build.
 
 `game.config.prod.json` is a non-deployable placeholder until its game ID is
@@ -324,8 +336,9 @@ credentials, `.env` files, player data, or live campaign state.
 The code is licensed under the terms in [`LICENSE.md`](LICENSE.md). Preserve the
 license and notices when redistributing. It is RUN-only/source-available before
 January 1, 2028 and automatically converts to MIT on that date; do not describe
-the current license as OSI open source. Runtime dependency licenses are listed
-in [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
+the current license as OSI open source. Runtime dependency and vendored-tool
+licenses are listed in
+[`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
 
 Contributions are welcome under [`CONTRIBUTING.md`](CONTRIBUTING.md). Report
 security issues privately by following [`SECURITY.md`](SECURITY.md).

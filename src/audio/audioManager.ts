@@ -39,6 +39,7 @@ class AudioManager {
     private suppressedSfx = 0;
     private paused = false;
     private hostPaused = false;
+    private adVisible = false;
     private pageHidden = document.visibilityState !== "visible";
     private bound = false;
 
@@ -56,6 +57,7 @@ class AudioManager {
         try {
             this.ensureGraph();
             if (!this.context) return false;
+            if (this.paused) return false;
             if (this.context.state === "suspended") await this.context.resume();
             this.sync();
             return this.context.state === "running";
@@ -70,8 +72,15 @@ class AudioManager {
         this.applyPauseState();
     }
 
+    /** Ads are not guaranteed to emit host lifecycle events. Keep this
+     * interruption separate from persisted player volume/mute settings. */
+    setAdVisible(visible: boolean): void {
+        this.adVisible = visible;
+        this.applyPauseState();
+    }
+
     private applyPauseState(): void {
-        this.paused = this.hostPaused || this.pageHidden;
+        this.paused = this.hostPaused || this.pageHidden || this.adVisible;
         if (!this.context) return;
         if (this.paused) {
             this.stopMusic();

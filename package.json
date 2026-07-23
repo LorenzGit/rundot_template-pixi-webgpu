@@ -1,6 +1,6 @@
 {
   "name": "template-pixi-webgpu",
-  "version": "0.8.1",
+  "version": "0.8.5",
   "description": "Production-minded PixiJS 8 WebGPU-first starter and RUN.world SDK capability reference.",
   "private": true,
   "license": "SEE LICENSE IN LICENSE.md",

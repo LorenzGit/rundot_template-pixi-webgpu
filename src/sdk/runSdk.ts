@@ -8,6 +8,7 @@
  * app must boot and run anyway.
  */
 import RundotGameAPI from "@series-inc/rundot-game-sdk/api";
+import { audioManager } from "../audio/audioManager.ts";
 // Type-only import from the package root (the /api entry doesn't re-export it);
 // erased at build time, so no extra runtime code is pulled in.
 import { HapticFeedbackStyle } from "@series-inc/rundot-game-sdk";
@@ -338,11 +339,15 @@ export async function showVerifiedRewardedAd(id: string, name: string): Promise<
     try {
         const ready = await withTimeout(RundotGameAPI.ads.isRewardedAdReadyAsync(), 2_000, "ads.ready");
         if (!ready) return "unavailable";
-        const completed = await withTimeout(
-            RundotGameAPI.ads.showRewardedAdAsync({ adDisplayId: id, adDisplayName: name }),
-            90_000,
-            "ads.rewarded",
-        );
+        audioManager.setAdVisible(true);
+        let completed = false;
+        try {
+            // Do not timeout a user-mediated overlay: the audio interruption
+            // must last until the host tells us it has actually closed.
+            completed = await RundotGameAPI.ads.showRewardedAdAsync({ adDisplayId: id, adDisplayName: name });
+        } finally {
+            audioManager.setAdVisible(false);
+        }
         return completed === true ? "verified" : "cancelled";
     } catch {
         return "failed";
@@ -358,11 +363,13 @@ export async function showVerifiedInterstitialAd(id: string, name: string): Prom
             "ads.interstitial.ready",
         );
         if (!ready) return "unavailable";
-        const displayed = await withTimeout(
-            RundotGameAPI.ads.showInterstitialAd({ adDisplayId: id, adDisplayName: name }),
-            90_000,
-            "ads.interstitial",
-        );
+        audioManager.setAdVisible(true);
+        let displayed = false;
+        try {
+            displayed = await RundotGameAPI.ads.showInterstitialAd({ adDisplayId: id, adDisplayName: name });
+        } finally {
+            audioManager.setAdVisible(false);
+        }
         return displayed === true ? "verified" : "unavailable";
     } catch {
         return "failed";
