@@ -31,7 +31,11 @@ Nothing here is imported by the default client bundle. It is typechecked by
 - `client/content.ts` — UGC, files, clips (including optional reaction camera/microphone), and native video.
 - `client/generation.ts` — billed generation and 3D avatar mutation.
 - `client/moderation.ts` — creator-only moderation operations.
-- `multiplayer/` — realtime client/server and deterministic Syncplay patterns.
+- `multiplayer/` — deliberately minimal realtime client/server and
+  deterministic SyncPlay patterns. Use
+  [the project-local multiplayer skill](../.agents/skills/rundot-multiplayer/SKILL.md)
+  for architecture, advanced capabilities, authority, and testing before
+  adapting them.
 - `config/` — inert Shop, LiveOps, leaderboard, simulation, and Syncplay
   operator configuration samples.
 

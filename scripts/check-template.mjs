@@ -76,6 +76,9 @@ const pixiApp = read("src/game/pixiApp.ts");
 const thirdPartyNotices = read("THIRD_PARTY_NOTICES.md");
 const localAgents = read("AGENTS.md");
 const img2threejsSkill = read(".agents/skills/img2threejs/SKILL.md");
+const multiplayerSkill = read(".agents/skills/rundot-multiplayer/SKILL.md");
+const multiplayerSources = read(".agents/skills/rundot-multiplayer/references/source-map.md");
+const multiplayerCapabilities = read(".agents/skills/rundot-multiplayer/references/capability-map.md");
 
 expect(/^\d+\.\d+\.\d+$/.test(packageJson.version), "package version must be semver");
 expect(lock.version === packageJson.version, "package-lock root version must match package.json");
@@ -127,6 +130,13 @@ for (const required of [
     ".agents/skills/img2threejs/grimoire/build/geometry_patterns.md",
     ".agents/skills/img2threejs/grimoire/feedback/render_capture.md",
     ".agents/skills/img2threejs/grimoire/intake/validation_rubric.md",
+    ".agents/skills/rundot-multiplayer/SKILL.md",
+    ".agents/skills/rundot-multiplayer/agents/openai.yaml",
+    ".agents/skills/rundot-multiplayer/references/capability-map.md",
+    ".agents/skills/rundot-multiplayer/references/security-and-authority.md",
+    ".agents/skills/rundot-multiplayer/references/source-map.md",
+    ".agents/skills/rundot-multiplayer/references/syncplay.md",
+    ".agents/skills/rundot-multiplayer/references/testing-and-operations.md",
     ".gitattributes",
     ".github/workflows/ci.yml",
     ".gitignore",
@@ -192,6 +202,55 @@ expect(
     !containsNamedEntry(".agents/skills/img2threejs", ".git"),
     "vendored skills must not contain nested Git metadata",
 );
+expect(/^name:\s*rundot-multiplayer$/m.test(multiplayerSkill), "project-local multiplayer skill identity changed");
+for (const feature of [
+    "persistent worlds",
+    "SeasonSchedule",
+    "broadcastDelta",
+    "shared economy",
+    "TurnManager",
+    "matchmakeRoom",
+    "room chat",
+    "SyncPlay",
+]) {
+    expect(
+        multiplayerSkill.toLowerCase().includes(feature.toLowerCase()) ||
+            multiplayerCapabilities.toLowerCase().includes(feature.toLowerCase()),
+        `multiplayer knowledge is missing ${feature}`,
+    );
+}
+expect(
+    multiplayerSources.includes("node_modules/@series-inc/rundot-game-sdk") &&
+        multiplayerSources.includes("https://series-1.gitbook.io/rundot-docs/readme/multiplayer") &&
+        multiplayerSources.includes("advanced-multiplayer"),
+    "multiplayer source map must route installed and live official documentation",
+);
+for (const document of [
+    "MULTIPLAYER.md",
+    "ADVANCED-MULTIPLAYER.md",
+    "SYNCPLAY.md",
+    "SYNCPLAY-SECRETS.md",
+    "SYNCPLAY-PHYSICS.md",
+    "SYNCPLAY-MOVEMENT.md",
+    "SYNCPLAY-PATHFINDING.md",
+    "SYNCPLAY-BOTS.md",
+    "SYNCPLAY-ANIMATION.md",
+    "SYNCPLAY-LAG-COMPENSATION.md",
+    "SERVER_AUTHORITATIVE.md",
+    "SIMULATION_CONFIG.md",
+]) {
+    expect(multiplayerSources.includes(document), `multiplayer source map is missing ${document}`);
+}
+expect(
+    localAgents.includes(".agents/skills/rundot-multiplayer/SKILL.md"),
+    "AGENTS.md must route the project-local multiplayer skill",
+);
+for (const unnecessary of ["README.md", "CHANGELOG.md", "INSTALLATION_GUIDE.md", "QUICK_REFERENCE.md"]) {
+    expect(
+        !fs.existsSync(path.join(root, ".agents/skills/rundot-multiplayer", unnecessary)),
+        `multiplayer skill contains unnecessary file: ${unnecessary}`,
+    );
+}
 
 for (const option of [
     "strict",

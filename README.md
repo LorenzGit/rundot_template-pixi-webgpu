@@ -262,6 +262,16 @@ denying unnecessary Firebase, protobuf, and native fsevents install behavior.
 
 ## Platform reference
 
+- [`.agents/skills/rundot-multiplayer/`](.agents/skills/rundot-multiplayer/)
+  is the source-driven multiplayer workflow. It routes authoritative realtime
+  rooms, persistent worlds, seasons, deltas, shared economy, turns, transfers,
+  PvP matchmaking, chat, server simulation, and deterministic SyncPlay to the
+  target SDK's installed documents and declarations, with focused authority and
+  verification references. It tracks RUN's official
+  [Multiplayer API](https://series-1.gitbook.io/rundot-docs/readme/multiplayer)
+  and
+  [Advanced Multiplayer API](https://series-1.gitbook.io/rundot-docs/readme/advanced-multiplayer)
+  without adding runtime code.
 - [`.agents/skills/img2threejs/`](.agents/skills/img2threejs/) vendors
   [`hoainho/img2threejs`](https://github.com/hoainho/img2threejs) as an optional
   project-local authoring skill. It turns a suitable reference image into a

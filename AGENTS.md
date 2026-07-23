@@ -10,6 +10,11 @@ defined there before changing SDK or CLI integration.
 
 ## Project-local skills
 
+- Use [`.agents/skills/rundot-multiplayer/SKILL.md`](.agents/skills/rundot-multiplayer/SKILL.md)
+  for any shared room, world, match, turn order, economy, synchronized
+  simulation, matchmaking, competitive result, or reconnectable session. Read
+  its source map first, then the references and installed SDK documents routed
+  for the selected architecture.
 - Use [`.agents/skills/img2threejs/SKILL.md`](.agents/skills/img2threejs/SKILL.md)
   when a reference image must become a code-only, procedural Three.js model,
   sculpt specification, or staged reconstruction plan. Read that file
@@ -27,5 +32,4 @@ defined there before changing SDK or CLI integration.
 ## Verification
 
 Run `npm run check:all` after template changes. The invariant suite verifies
-that the project-local skill retains its instructions, license, pipeline
-scripts, and required quality references.
+that project-local skills retain their instructions and required resources.

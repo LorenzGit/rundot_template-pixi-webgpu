@@ -85,8 +85,8 @@ Safety labels:
 | Video generation | billed | `additional_features/client/generation.ts`; provider policy failures and cancellation are normal outcomes |
 | 3D generate/remesh/rig/animate | billed | `additional_features/client/generation.ts`; file keys/URLs, staged operations, and completed-job recovery |
 | 3D avatar | read/gesture/write | `additional_features/client/generation.ts`; loading is read-only, editor/save/delete require player action |
-| Realtime multiplayer | server | `additional_features/multiplayer/realtimeClient.ts`, `realtimeServer.ts`, and `rundot/realtime.config.json`; current `realtime` + `mp-server` path |
-| Syncplay | server | `additional_features/multiplayer/syncplay.ts` + Syncplay room config; pure immutable step, strict determinism plugin, replay/synctest before adoption |
+| Realtime multiplayer | server | `.agents/skills/rundot-multiplayer/` plus `additional_features/multiplayer/realtimeClient.ts`, `realtimeServer.ts`, and `rundot/realtime.config.json`; current `realtime` + `mp-server` path |
+| Syncplay | server | `.agents/skills/rundot-multiplayer/references/syncplay.md` plus `additional_features/multiplayer/syncplay.ts` and Syncplay room config; pure immutable step, strict determinism plugin, replay/synctest before adoption |
 | Creator admin generation/UGC | privileged | `additional_features/client/moderation.ts`; role check and explicit moderation decision for every mutation |
 
 ## RUN runtime features outside the SDK
