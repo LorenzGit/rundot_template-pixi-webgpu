@@ -41,13 +41,13 @@ export function createDemoScene(app: Application, stage: Stage): Scene {
     const sprite = new AnimatedSprite(frames);
     const emitter = createParticleEmitter(stage.root);
     const tweens = createTweenController();
-    const baseSize = stage.width * 0.23;
+    const baseSize = Math.min(stage.designWidth(), stage.designHeight()) * 0.23;
 
     sprite.anchor.set(0.5);
     sprite.width = baseSize;
     sprite.height = baseSize;
     const baseScale = sprite.scale.x;
-    sprite.x = stage.width / 2;
+    sprite.x = stage.designWidth() / 2;
     sprite.y = stage.designHeight() / 2;
     sprite.animationSpeed = highQuality ? 0.12 : 0.07;
     if (reducedMotion) sprite.gotoAndStop(0);
@@ -81,6 +81,7 @@ export function createDemoScene(app: Application, stage: Stage): Scene {
     };
 
     const offResize = stage.onResize(() => {
+        sprite.x = Math.min(sprite.x, stage.designWidth() - baseSize / 2);
         sprite.y = Math.min(sprite.y, stage.designHeight() - baseSize / 2);
     });
 
@@ -100,8 +101,9 @@ export function createDemoScene(app: Application, stage: Stage): Scene {
             vx = Math.abs(vx);
             bounced = true;
         }
-        if (sprite.x > stage.width - half) {
-            sprite.x = stage.width - half;
+        const maxX = stage.designWidth();
+        if (sprite.x > maxX - half) {
+            sprite.x = maxX - half;
             vx = -Math.abs(vx);
             bounced = true;
         }

@@ -1,39 +1,26 @@
 /**
- * Design-resolution stage: scene code works in fixed DESIGN UNITS, and this
- * module maps them to real pixels — so anything sized at 1/4 of the design
- * width takes up 1/4 of the screen width on EVERY device and aspect ratio.
+ * Orientation-adaptive design stage. Scene code works in design units while
+ * this module maps them to CSS pixels:
  *
- * How it works (width-fit, the pattern a shipped RUN game uses for all of
- * its gameplay layout):
- *   - The stage root container is scaled by screenWidth / DESIGN_WIDTH.
- *   - Horizontal space is therefore always exactly DESIGN_WIDTH units wide.
- *   - Vertical space varies with the device: designHeight() reports how many
- *     units tall the screen currently is (taller phones simply see more).
- *     Anchor vertical layout to top / bottom / center via designHeight() —
- *     never hardcode a bottom edge.
+ * - Portrait fixes the design width and reveals more or less vertical space.
+ * - Landscape fixes the design height and reveals more or less horizontal
+ *   space.
  *
- * With the 9:16 device-frame clamp in styles/app.css, designHeight() for a
- * DESIGN_WIDTH of 720 ranges from 1280 (9:16 exactly) to ~1560 (tall 19.5:9
- * phones). Design your layout to work across that range: keep must-see
- * content within the top 1280 units or bottom-anchor it.
+ * This keeps object scale stable across rotation without cropping the scene or
+ * stretching art. Re-read designWidth()/designHeight() inside resize handlers;
+ * never hardcode the current long edge.
  */
 import { Container, type Application } from "pixi.js";
 
-/**
- * ADAPT: the game's design width, in units. 720 is a good default for
- * portrait (art assets sized against a 720-wide layout look right at 2x DPR
- * on modern phones). For a LANDSCAPE game, invert the pattern: fix a design
- * HEIGHT instead and scale by screenHeight / DESIGN_HEIGHT, letting width
- * vary — see layout() below.
- */
-export const DESIGN_WIDTH = 720;
+/** ADAPT: the fixed short edge. 720 gives useful 2x-density art targets. */
+export const DESIGN_SHORT_EDGE = 720;
 
 /** What createStage returns — the surface scenes build against. */
 export interface Stage {
     /** Add all scene content here (NOT app.stage), positioned in design units. */
     root: Container;
-    /** Constant: the design-space width (= DESIGN_WIDTH). */
-    width: number;
+    /** Current screen width in design units — re-read after resizes. */
+    designWidth(): number;
     /** Current screen height in design units — re-read after resizes. */
     designHeight(): number;
     /** Current design-unit → pixel factor (rarely needed directly). */
@@ -52,12 +39,15 @@ export function createStage(app: Application): Stage {
     app.stage.addChild(root);
 
     const resizeCbs = new Set<() => void>();
-    let _designHeight = (DESIGN_WIDTH * 16) / 9;
+    let _designWidth = DESIGN_SHORT_EDGE;
+    let _designHeight = (DESIGN_SHORT_EDGE * 16) / 9;
 
     const layout = () => {
         if (app.screen.width <= 0 || app.screen.height <= 0) return;
-        const s = app.screen.width / DESIGN_WIDTH;
+        const isLandscape = app.screen.width > app.screen.height;
+        const s = isLandscape ? app.screen.height / DESIGN_SHORT_EDGE : app.screen.width / DESIGN_SHORT_EDGE;
         root.scale.set(s);
+        _designWidth = app.screen.width / s;
         _designHeight = app.screen.height / s;
         for (const cb of resizeCbs) cb();
     };
@@ -69,7 +59,7 @@ export function createStage(app: Application): Stage {
 
     return {
         root,
-        width: DESIGN_WIDTH,
+        designWidth: () => _designWidth,
         designHeight: () => _designHeight,
         scale: () => root.scale.x,
         onResize(cb) {

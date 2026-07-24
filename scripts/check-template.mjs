@@ -73,6 +73,8 @@ const saveSystem = read("src/systems/save.ts");
 const runSdk = read("src/sdk/runSdk.ts");
 const main = read("src/main.tsx");
 const pixiApp = read("src/game/pixiApp.ts");
+const stage = read("src/game/stage.ts");
+const multiResolution = read("docs/multi-resolution.md");
 const thirdPartyNotices = read("THIRD_PARTY_NOTICES.md");
 const localAgents = read("AGENTS.md");
 const img2threejsSkill = read(".agents/skills/img2threejs/SKILL.md");
@@ -148,6 +150,7 @@ for (const required of [
     "THIRD_PARTY_NOTICES.md",
     "docs/audio.md",
     "docs/monetization.md",
+    "docs/multi-resolution.md",
     "docs/run-capabilities.md",
     "docs/rundot-cli.md",
     "docs/runtime.md",
@@ -425,6 +428,48 @@ expect(
     /\.subscreen-content\s*\{[^}]*touch-action:\s*pan-y[^}]*-webkit-overflow-scrolling:\s*touch/s.test(appStyles),
     "subscreen content must allow momentum touch scrolling",
 );
+expect(
+    /@media\s*\(orientation:\s*landscape\)[\s\S]*--game-w:\s*min\(100vw,\s*calc\(100dvh\s*\*\s*2\.2\)\)/.test(
+        appStyles,
+    ),
+    "landscape must expand into a wide playable frame",
+);
+expect(
+    /@media\s*\(orientation:\s*landscape\)[\s\S]*grid-template-areas:[\s\S]*"identity navigation"/.test(appStyles),
+    "landscape menu must use its dedicated two-column composition",
+);
+expect(
+    /@media\s*\(orientation:\s*landscape\)[\s\S]*\.menu-tile:last-child\s*\{[^}]*grid-column:\s*auto/s.test(appStyles),
+    "all six landscape menu actions must remain balanced in the grid",
+);
+expect(
+    stage.includes("app.screen.height / DESIGN_SHORT_EDGE") &&
+        stage.includes("designWidth: () => _designWidth") &&
+        stage.includes("designHeight: () => _designHeight"),
+    "Pixi stage must adapt its fixed short edge across orientation changes",
+);
+for (const requirement of [
+    "Full-viewport backdrop",
+    "Playable frame",
+    "Safe interactive area",
+    "env(safe-area-inset-*)",
+    "10 CSS pixels",
+    "44×44 CSS pixels",
+    "DPR 1, 2, and 3",
+    "portrait → landscape → portrait",
+]) {
+    expect(multiResolution.includes(requirement), `multi-resolution guidance is missing: ${requirement}`);
+}
+expect(
+    runSdk.includes("if (!_ready) return area;"),
+    "local browser safe-area environment fallbacks must not be overwritten with zero",
+);
+for (const edge of ["top", "right", "bottom", "left"]) {
+    expect(
+        appStyles.includes(`--safe-${edge}: env(safe-area-inset-${edge}, 0px)`),
+        `browser safe-area fallback is missing: ${edge}`,
+    );
+}
 
 for (const ignored of [
     "node_modules/",

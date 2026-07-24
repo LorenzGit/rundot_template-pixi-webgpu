@@ -2,10 +2,10 @@
  * Screen router. One phase visible at a time; the 'playing' phase stacks the
  * React HUD above the Pixi canvas.
  *
- * #app-frame (styled in styles/app.css) is the device frame: a centered
- * portrait column that fills phones edge-to-edge and sits over a full-bleed
- * desktop backdrop. Everything interactive — canvas and DOM UI — lives inside
- * the frame, so safe areas and input never leak into decorative side art.
+ * #app-frame (styled in styles/app.css) is the playable frame: portrait-first
+ * with a dedicated landscape layout, centered over a full-bleed backdrop.
+ * Everything interactive — canvas and DOM UI — lives inside the frame, so
+ * safe areas and input never leak into decorative side art.
  */
 import { store, useStore } from "../state/store.ts";
 import { lazy, Suspense } from "react";

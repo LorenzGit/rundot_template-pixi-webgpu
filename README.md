@@ -150,10 +150,11 @@ excluded or privileged patterns live in
 
 ---
 
-A small, production-minded portrait starter for 2D RUN.world games. The default
-app is deliberately ordinary: React 19 UI, PixiJS 8 with WebGPU-first/WebGL
-fallback, generated WebAudio, strict TypeScript, versioned saves, localization,
-daily systems, and fail-closed RUN integrations.
+A small, production-minded, portrait-first starter for 2D RUN.world games with
+a complete landscape-safe layout. The default app is deliberately ordinary:
+React 19 UI, PixiJS 8 with WebGPU-first/WebGL fallback, generated WebAudio,
+strict TypeScript, versioned saves, localization, daily systems, and fail-closed
+RUN integrations.
 
 <p align="center">
   <img src="./image.png" alt="Pixel Foundry template main menu running in a portrait mobile viewport" width="386">
@@ -220,12 +221,12 @@ denying unnecessary Firebase, protobuf, and native fsevents install behavior.
 | Path | Purpose |
 | --- | --- |
 | `.agents/skills/` | Project-local authoring skills copied with the template |
-| `src/game/` | Pixi application, portrait stage, demo scene, particles, and tweens |
+| `src/game/` | Pixi application, orientation-adaptive stage, demo scene, particles, and tweens |
 | `src/sdk/` | Capability-gated RUN facade and visible Feature Lab integration |
 | `src/systems/` | Persistence, trusted time, localization, and daily systems |
 | `src/ui/` | React-owned menus, HUD, settings, and platform demonstrations |
 | `additional_features/` | Typechecked opt-in patterns excluded from the default client bundle |
-| `docs/` | Platform, runtime, monetization, CLI, and audio contracts |
+| `docs/` | Platform, multi-resolution, runtime, monetization, CLI, and audio contracts |
 | `scripts/` | Template invariants and production-build verification |
 
 ## What is active
@@ -234,8 +235,10 @@ denying unnecessary Firebase, protobuf, and native fsevents install behavior.
   that fails. `?renderer=webgpu` and
   `?renderer=webgl` force a backend for QA; the result is exposed as
   `document.documentElement.dataset.renderer`.
-- A centered 9:16 portrait frame scales across phone, tablet, and desktop while
-  RUN safe-area values feed CSS variables on every side.
+- A centered portrait-first frame expands into a deliberate two-column
+  landscape layout instead of squeezing the portrait UI. The Pixi stage uses
+  width-fit portrait and height-fit landscape design units, while RUN and
+  browser safe-area values protect every edge.
 - The procedural demo exercises sprite animation, tweens, particles, cleanup,
   reduced motion, quality scaling, lifecycle pause/resume, and generated audio.
 - Versioned persistence validates untrusted save fields and serializes/coalesces
@@ -259,6 +262,19 @@ denying unnecessary Firebase, protobuf, and native fsevents install behavior.
   counters. Its direction is recorded in `docs/audio.md`.
 - `?qa=1` installs a semantic `globalThis.__gameQa` contract in development
   only. Production builds do not expose it.
+
+## Multi-resolution contract
+
+Multi-resolution support is a correctness requirement, not a final polish
+task. A game must preserve gameplay scale, readable text, reachable controls,
+image proportions, scrolling, and state across supported phones, tablets,
+desktop embeds, orientations, DPR values, and device cutouts.
+
+Read [`docs/multi-resolution.md`](docs/multi-resolution.md) before replacing the
+template layout or Pixi stage. It defines the three layout layers, host/browser
+safe-area priority, fixed-short-edge design coordinates, image fit rules,
+minimum text and touch sizes, rotation behavior, failure patterns, and the
+required viewport test matrix.
 
 ## Platform reference
 

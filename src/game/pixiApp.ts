@@ -30,8 +30,8 @@ async function initializeRenderer(host: HTMLElement, preference: RendererPrefere
 
 /**
  * Create and mount a Pixi app inside a host element. The canvas auto-resizes
- * to the host (the device-frame div), so the game is sized by CSS — the same
- * `--game-w` column that sizes the DOM UI.
+ * to the host (the playable-frame div), so the game is sized by CSS — the same
+ * orientation-aware `--game-w` frame that sizes the DOM UI.
  *
  * @param host element the canvas fills (position: relative/absolute)
  */

@@ -16,12 +16,19 @@
 - RUN safe-area values are applied to CSS custom properties after the bounded host handshake.
 - SDK 5.24 safe-area values are static after initialization, so the template
   reads them once instead of adding resize polling that cannot change the result.
+- Outside the RUN host, the stylesheet retains its browser
+  `env(safe-area-inset-*)` fallbacks instead of overwriting them with zero.
 
 ## Renderer and persistence
 
 - Default renderer selection tries WebGPU initialization, not just feature
   detection, and retries with a fresh WebGL application if adapter/device setup
   fails. Forced `?renderer=` modes never fall back so QA failures stay visible.
+- The design stage is orientation-adaptive: portrait fixes the 720-unit width,
+  landscape fixes the 720-unit height, and the long edge remains fluid. Scene
+  resize handlers re-read both design dimensions after rotation.
+- [`multi-resolution.md`](multi-resolution.md) defines the full viewport,
+  orientation, safe-area, typography, image-fit, and verification contract.
 - Parsed saves are treated as untrusted input: booleans, enums, counters, day
   keys, claim lists, and quest values are normalized before entering state.
 - Save writes are serialized and rapid updates are coalesced. A slow older RUN

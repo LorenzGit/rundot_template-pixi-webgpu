@@ -30,10 +30,10 @@ input:focus-visible {
 }
 
 /* ---------------------------------------------------------------------------
-   Viewport + device frame — pattern from a shipped RUN game. The app is a
-   centered portrait playable frame: full-width on phones, 9:16 on
-   desktop/landscape. The page backdrop is always full-bleed behind it; page
-   scroll and zoom stay locked.
+   Viewport + playable frame. Portrait is the template's primary presentation,
+   but landscape is a first-class responsive layout rather than a squeezed
+   portrait column. The full-page backdrop remains separate from the playable
+   frame, and page scroll/zoom stay locked.
 --------------------------------------------------------------------------- */
 
 :root {
@@ -45,21 +45,19 @@ input:focus-visible {
     --page-backdrop:
         radial-gradient(circle at 50% 16%, rgba(34, 197, 94, 0.22), transparent 38rem),
         linear-gradient(145deg, #101a35, #080d1a 58%, #071e1d);
-    /* The RUN host already pads below its native header, so we deliberately
-       do NOT use env(safe-area-inset-top) — it double-pads on Android.
-       Consume via the pt-safe-top utility below. */
-    --safe-top: 0px;
-    --safe-right: 0px;
+    /* Browser insets are the local fallback. When attached, RUN replaces all
+       four values with host-authoritative insets before React mounts. */
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-right: env(safe-area-inset-right, 0px);
     --safe-bottom: env(safe-area-inset-bottom, 0px);
-    --safe-left: 0px;
+    --safe-left: env(safe-area-inset-left, 0px);
 }
 
 @media (orientation: landscape) {
-    /* ADAPT: 9/16 assumes a portrait game (game.config orientation:
-       "portrait"). For a landscape game, drop this override and set
-       "orientation": "landscape" in game.config.prod.json instead. */
+    /* Accommodates modern 19.5:9–20:9 phones without stretching indefinitely
+       on ultrawide desktop windows. Decorative side art fills any remainder. */
     :root {
-        --game-w: min(100vw, calc(100dvh * 9 / 16));
+        --game-w: min(100vw, calc(100dvh * 2.2));
     }
 }
 
@@ -89,9 +87,9 @@ body {
 }
 
 /* Full-viewport presentation backdrop. This is deliberately separate from the
-   portrait playable frame: desktop side areas show intentional game art rather
-   than empty/skinny/cropped app content. Use `cover`, not `fill`, so decorative
-   artwork may crop but is never geometrically distorted. */
+   playable frame: desktop side areas show intentional game art rather than
+   empty/cropped app content. Use `cover`, not `fill`, so decorative artwork
+   may crop but is never geometrically distorted. */
 body::before {
     content: "";
     position: fixed;
@@ -110,7 +108,7 @@ body::before {
     z-index: 1;
 }
 
-/* The device frame every screen renders inside (see ui/App.jsx). */
+/* The playable frame every screen renders inside (see ui/App.tsx). */
 #app-frame {
     position: fixed;
     top: 0;
@@ -129,8 +127,7 @@ body::before {
         auto;
 }
 
-/* Safe-area utilities. Bottom uses the real env inset (home indicator);
-   top uses --safe-top per the note above. */
+/* Safe-area utilities consume either browser fallbacks or RUN host values. */
 @utility pt-safe-top {
     padding-top: calc(0.5rem + var(--safe-top));
 }
@@ -731,6 +728,163 @@ button:disabled {
     }
     .menu-tile {
         min-height: 48px;
+    }
+}
+
+@media (orientation: landscape) {
+    .menu-shell,
+    .subscreen {
+        width: 100%;
+        max-width: 1180px;
+        margin-inline: auto;
+        padding-right: max(clamp(20px, 4vmin, 48px), var(--safe-right));
+        padding-left: max(clamp(20px, 4vmin, 48px), var(--safe-left));
+    }
+
+    .menu-shell {
+        display: grid;
+        grid-template-areas:
+            "identity summary"
+            "identity play"
+            "identity navigation"
+            "identity stamp";
+        grid-template-rows: auto auto auto auto;
+        grid-template-columns: minmax(200px, 0.8fr) minmax(300px, 1.2fr);
+        align-content: center;
+        column-gap: clamp(18px, 5vw, 88px);
+        row-gap: 10px;
+    }
+
+    .menu-header {
+        grid-area: identity;
+        align-self: center;
+    }
+
+    .menu-header h1 {
+        font-size: clamp(46px, 9.5dvh, 76px);
+    }
+
+    .menu-subtitle {
+        max-width: 28rem;
+    }
+
+    .player-strip {
+        grid-area: summary;
+    }
+
+    .play-button {
+        grid-area: play;
+    }
+
+    .menu-grid {
+        grid-area: navigation;
+    }
+
+    .menu-tile:last-child {
+        grid-column: auto;
+    }
+
+    .template-stamp {
+        grid-area: stamp;
+    }
+
+    .menu-orbit-a {
+        width: 460px;
+        height: 460px;
+        right: 38%;
+        top: -34%;
+    }
+
+    .menu-orbit-b {
+        width: 290px;
+        height: 290px;
+        right: 44%;
+        top: 1%;
+    }
+
+    .subscreen-header h2 {
+        font-size: clamp(28px, 6.8dvh, 44px);
+    }
+
+    .subscreen-content {
+        padding-top: 14px;
+    }
+
+    .reward-track {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .reward-day:last-child {
+        grid-column: auto;
+    }
+
+    .stats-grid,
+    .feature-status-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+@media (orientation: landscape) and (max-height: 430px) {
+    .menu-shell {
+        row-gap: 6px;
+    }
+
+    .menu-header h1 {
+        font-size: 46px;
+    }
+
+    .menu-subtitle {
+        display: none;
+    }
+
+    .play-button {
+        min-height: 54px;
+    }
+
+    .menu-grid {
+        gap: 6px;
+    }
+
+    .menu-tile {
+        min-height: 44px;
+        padding-block: 4px;
+    }
+
+    .menu-icon {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+@media (orientation: landscape) and (max-width: 560px) {
+    .menu-shell,
+    .subscreen {
+        padding-right: max(12px, var(--safe-right));
+        padding-left: max(12px, var(--safe-left));
+    }
+
+    .menu-shell {
+        grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+        column-gap: 14px;
+    }
+
+    .menu-header h1 {
+        font-size: clamp(30px, 8vw, 36px);
+    }
+
+    .eyebrow {
+        font-size: 11px;
+    }
+
+    .menu-tile {
+        gap: 7px;
+        font-size: 12px;
+    }
+
+    .menu-icon {
+        width: 30px;
+        height: 30px;
+        font-size: 11px;
     }
 }
 

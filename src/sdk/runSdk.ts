@@ -106,6 +106,9 @@ export function getRunSafeArea(): Readonly<RunSafeArea> {
 /** Publish host insets as CSS variables without coupling UI code to the SDK. */
 export function applyRunSafeArea(): Readonly<RunSafeArea> {
     const area = getRunSafeArea();
+    // Outside RUN, leave the stylesheet's env(safe-area-inset-*) fallbacks
+    // intact. Publishing zero-valued host data would erase real browser insets.
+    if (!_ready) return area;
     const root = document.documentElement;
     root.style.setProperty("--safe-top", `${area.top}px`);
     root.style.setProperty("--safe-right", `${area.right}px`);
