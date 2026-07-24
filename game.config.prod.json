@@ -2,7 +2,7 @@
   "gameId": "REPLACE_WITH_RUN_GAME_ID",
   "relativePathToDistFolder": "dist",
   "usesPreloader": false,
-  "orientation": "portrait",
+  "orientation": "Both",
   "keywords": [],
   "kitId": null
 }

@@ -76,6 +76,11 @@ This template uses the following source priority:
 `--safe-right`, `--safe-bottom`, and `--safe-left`. `src/styles/app.css`
 consumes those variables in the menu, subscreens, HUD, and toasts.
 
+`src/ui/App.tsx` re-runs `applyRunSafeArea()` on `orientationchange`. ViewDeck
+updates its mocked `getSafeArea()` value before dispatching that event, so the
+new insets are applied synchronously without reloading the app or resetting
+React/Pixi state. The effect removes its listener on unmount.
+
 Do not blindly add both host padding and browser padding. Some hosts already
 reserve space for native chrome, particularly above the game. Confirm the
 container contract, choose one authoritative value for each edge, and test the
@@ -121,6 +126,7 @@ Rotation and live resizing are state transitions, not fresh launches. A robust
 game:
 
 - recomputes layout from the new usable frame;
+- re-reads host safe areas on `orientationchange`;
 - keeps the current run, score, timers, and selections intact;
 - clamps movable objects into valid bounds;
 - updates camera, effects, hit regions, and HUD anchors together;

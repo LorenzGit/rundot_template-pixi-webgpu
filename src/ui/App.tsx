@@ -8,7 +8,7 @@
  * safe areas and input never leak into decorative side art.
  */
 import { store, useStore } from "../state/store.ts";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import LoadingScreen from "./LoadingScreen.tsx";
 import MainMenu from "./MainMenu.tsx";
 import Hud from "./Hud.tsx";
@@ -18,8 +18,19 @@ import DailyQuestsScreen from "./DailyQuestsScreen.tsx";
 import ShopScreen from "./ShopScreen.tsx";
 import StatsScreen from "./StatsScreen.tsx";
 import SettingsScreen from "./SettingsScreen.tsx";
+import { applyRunSafeArea } from "../sdk/runSdk.ts";
 
 const RunFeaturesScreen = lazy(() => import("./RunFeaturesScreen.tsx"));
+
+function useOrientationSafeArea(): void {
+    useEffect(() => {
+        const refreshSafeArea = () => {
+            applyRunSafeArea();
+        };
+        window.addEventListener("orientationchange", refreshSafeArea);
+        return () => window.removeEventListener("orientationchange", refreshSafeArea);
+    }, []);
+}
 
 function MenuRoute() {
     const screen = useStore((state) => state.menuScreen);
@@ -44,6 +55,7 @@ function MenuRoute() {
 }
 
 export default function App() {
+    useOrientationSafeArea();
     const phase = useStore((s) => s.phase);
     return (
         <div id="app-frame" className="bg-surface text-white">

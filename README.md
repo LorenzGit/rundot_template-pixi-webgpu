@@ -238,7 +238,9 @@ denying unnecessary Firebase, protobuf, and native fsevents install behavior.
 - A centered portrait-first frame expands into a deliberate two-column
   landscape layout instead of squeezing the portrait UI. The Pixi stage uses
   width-fit portrait and height-fit landscape design units, while RUN and
-  browser safe-area values protect every edge.
+  browser safe-area values protect every edge. The production config declares
+  `Both`; `orientationchange` re-reads RUN/ViewDeck insets without reloading or
+  resetting the current game.
 - The procedural demo exercises sprite animation, tweens, particles, cleanup,
   reduced motion, quality scaling, lifecycle pause/resume, and generated audio.
 - Versioned persistence validates untrusted save fields and serializes/coalesces

@@ -14,8 +14,13 @@
   `requestPopOrQuit()` when the template navigation stack is empty.
 - Identity changes trigger a clean reload when the profile ID changes. The game never flushes one player's in-memory state under another identity.
 - RUN safe-area values are applied to CSS custom properties after the bounded host handshake.
-- SDK 5.24 safe-area values are static after initialization, so the template
-  reads them once instead of adding resize polling that cannot change the result.
+- The app calls `applyRunSafeArea()` again on `orientationchange`. ViewDeck
+  updates its mocked `system.getSafeArea()` value before dispatching that event,
+  so the CSS insets update without reloading or replacing game state. The
+  listener is removed when the React root unmounts.
+- SDK 5.24 production documentation describes safe-area values as static after
+  initialization. Re-reading on the discrete orientation event is harmless,
+  supports ViewDeck's rotation contract, and avoids resize polling.
 - Outside the RUN host, the stylesheet retains its browser
   `env(safe-area-inset-*)` fallbacks instead of overwriting them with zero.
 
@@ -29,6 +34,8 @@
   resize handlers re-read both design dimensions after rotation.
 - [`multi-resolution.md`](multi-resolution.md) defines the full viewport,
   orientation, safe-area, typography, image-fit, and verification contract.
+- `game.config.prod.json` declares `Both`, matching the template's intentional
+  portrait and landscape layouts and allowing runtime rotation.
 - Parsed saves are treated as untrusted input: booleans, enums, counters, day
   keys, claim lists, and quest values are normalized before entering state.
 - Save writes are serialized and rapid updates are coalesced. A slow older RUN

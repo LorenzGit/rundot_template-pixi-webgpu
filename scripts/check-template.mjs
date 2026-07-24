@@ -72,6 +72,7 @@ const serverTime = read("src/systems/serverTime.ts");
 const saveSystem = read("src/systems/save.ts");
 const runSdk = read("src/sdk/runSdk.ts");
 const main = read("src/main.tsx");
+const app = read("src/ui/App.tsx");
 const pixiApp = read("src/game/pixiApp.ts");
 const stage = read("src/game/stage.ts");
 const multiResolution = read("docs/multi-resolution.md");
@@ -339,7 +340,7 @@ for (const file of [...sourceFiles("src"), ...sourceFiles("additional_features")
 }
 
 expect(prodConfig.gameId.startsWith("REPLACE_WITH_"), "template production game ID must remain fail-closed");
-expect(prodConfig.orientation === "portrait", "template production orientation must remain portrait");
+expect(prodConfig.orientation === "Both", "responsive template production orientation must remain Both");
 expect(Array.isArray(prodConfig.keywords), "template production keywords field must remain explicit");
 expect(prodConfig.kitId === null, "template production kitId field must remain explicit");
 expect(vite.includes("rundotGameLibrariesPlugin()"), "RUN embedded-library plugin must be enabled");
@@ -463,6 +464,12 @@ for (const requirement of [
 expect(
     runSdk.includes("if (!_ready) return area;"),
     "local browser safe-area environment fallbacks must not be overwritten with zero",
+);
+expect(
+    app.includes('window.addEventListener("orientationchange", refreshSafeArea)') &&
+        app.includes('window.removeEventListener("orientationchange", refreshSafeArea)') &&
+        app.includes("applyRunSafeArea();"),
+    "orientation changes must re-read safe areas with StrictMode-safe listener cleanup",
 );
 for (const edge of ["top", "right", "bottom", "left"]) {
     expect(
